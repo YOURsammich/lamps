@@ -33,7 +33,7 @@ function drawLine(X, Y) {
     Y *= 5;
     
     ctx.beginPath();
-    ctx.quadraticCurveTo(X+((Math.random()*100)-50), Y+((Math.random()*100)-50), X+((Math.random()*100)-50), Y+((Math.random()*100)-50));
+    ctx.quadraticCurveTo(X, Y, X + 50, Y + 50);
     ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
     ctx.closePath();
     ctx.stroke();
