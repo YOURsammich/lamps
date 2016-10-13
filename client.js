@@ -8,7 +8,7 @@ function init() {
 }
 
 
-function drawTri(X, Y) {
+function drawTri(X, Y, color) {
     X *= 5;
     Y *= 10;
     
@@ -24,23 +24,12 @@ function drawTri(X, Y) {
     }
     
     ctx.closePath();
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = color || '#red';
     ctx.fill();
 }
 
-function drawLine(X, Y) {
-    X *= 5;
-    Y *= 5;
-    
-    ctx.beginPath();
-    ctx.quadraticCurveTo(X, Y, X + 50, Y + 50);
-    ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
-    ctx.closePath();
-    ctx.stroke();
-}
-
 function getCoords(width, height, angle, posX, posY) {
-  var x = width + width * Math.cos(angle * Math.PI / 80);
+  var x = width + width * Math.cos(angle * Math.PI / 180);
   var y = height + height * Math.sin(angle * Math.PI / 180);
   return {
     x : x + posX,
@@ -48,17 +37,26 @@ function getCoords(width, height, angle, posX, posY) {
   };
 }
 
-function drawCircle(X, Y) {
-    var angle,
-        radius = 25,
-        cLeft,
-        cRight;
+function drawCircle(X, Y, color) {
+    var theRadius = 5;
     
-    for(angle = 0; angle <= 720; angle++) {
-        var coords = getCoords(25, 25/2, angle, X, Y);
-        //drawLine(Math.round(coords.x), Math.round(coords.x) + 10, Math.round(coords.y));
-        drawTri(Math.round(coords.x), Math.round(coords.y));
-    }
+    setInterval(function () {
+        
+        if (theRadius > -50) {
+            for(var q = 0; q < 360; q++) {
+                var coords = getCoords(theRadius, theRadius, q, X, Y);
+                drawTri(Math.round(coords.x), Math.round(coords.y / 2), color);
+            }
+            theRadius--;
+            X++;
+            Y++;
+        } else {
+            clearInterval(this);
+        }
+        
+    }, 100);
+    
+    
 }
 
 var X = 0,
@@ -68,17 +66,11 @@ var X = 0,
 
 document.body.addEventListener('mousemove', function (e) {
     X = e.clientX / 5;
-    Y = e.clientY / 10;
-})
+    Y = e.clientY / 5;
+});
 
-setInterval(function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    angle++;
-    for(var q = angle; q < angle + 200; q++) {
-        var coords = getCoords(raidus, raidus, q, X, Y);
-        drawLine(Math.round(coords.x), Math.round(coords.y));
-    }
-    //drawCircle(X, Y);
-}, 10);
+document.body.addEventListener('click', function (e) {
+    drawCircle(X, Y, '#'+Math.floor(Math.random()*16777215).toString(16));
+});
 
 init();
